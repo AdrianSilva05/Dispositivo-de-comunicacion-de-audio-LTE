@@ -12,7 +12,7 @@ void setup() {
     cfg.pin_data = 25;
     i2s.begin(cfg);
 
-    a2dp_sink.start("BLUTUDELDIABLO");
+    a2dp_sink.start("PruebaAmplificador");
 }
 
 void loop() {
