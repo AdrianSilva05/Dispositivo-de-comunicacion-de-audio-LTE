@@ -38,7 +38,7 @@ void setup() {
   digitalWrite(MODEM_PWRKEY, LOW);
 
   modemSerial.begin(115200, SERIAL_8N1, MODEM_RX, MODEM_TX);
-  delay(5000); // Esperar que el módem arranque completamente
+  delay(15000); // Esperar que el módem arranque completamente
   Serial.println("Enviando comandos AT...\n");
 
   sendAT("AT");           // Verificar comunicación
