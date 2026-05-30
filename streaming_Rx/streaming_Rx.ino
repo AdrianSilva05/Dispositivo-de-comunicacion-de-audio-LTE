@@ -355,10 +355,7 @@ void taskI2S(void* param) {
 
     if (bufPop(&slot)) {
       i2s_write(I2S_SPK_PORT, slot.data, slot.len, &written, portMAX_DELAY);
-      // Delay para igualar tasa de consumo con tasa de producción
-      // FETCH tarda 160ms y trae 4 paquetes → 40ms por paquete
-      // I2S reproduce 1 paquete de 20ms → necesita esperar 20ms más
-      vTaskDelay(pdMS_TO_TICKS(60));  // era 20, prueba con 60
+      vTaskDelay(pdMS_TO_TICKS(55));
     } else {
       i2s_write(I2S_SPK_PORT, silence, BYTES_PER_PKT, &written, portMAX_DELAY);
       buffering = true;
