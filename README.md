@@ -1,6 +1,6 @@
 # Sección de pruebas iniciales
 
-Los siguientes códigos fueron utilizados para **pruebas iniciales, aún sin transmisión LTE**. Funcionan para probar el funcionamiento del:
+Los siguientes códigos fueron utilizados para **pruebas iniciales, aún sin transmisión LTE**. Útiles para probar el funcionamiento del:
 
 + **Micrófono INMP441** (comunicaciones.ino).
 + **Amplificador MAX98357A** (prueba_amp.ino). 
