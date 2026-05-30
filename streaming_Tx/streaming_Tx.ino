@@ -355,7 +355,7 @@ void loop() {
 
   // Convertir 32-bit → 16-bit (tomar los 16 bits altos)
   for (int i = 0; i < samplesRead; i++) {
-    audio_pkt[i] = (int16_t)(i2s_raw[i] >> 16);
+    audio_pkt[i] = (int16_t)(i2s_raw[i] >> 15);
   }
 
   // Copiar a buffer de envío
