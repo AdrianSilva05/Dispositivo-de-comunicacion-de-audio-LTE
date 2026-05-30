@@ -32,4 +32,6 @@ Antes de realizar la prueba, se debe asegurar que:
 
 + El servidor esté encendido.
 + Cada tarjeta SIM esté insertada en un módulo (preferiblemente ambas del mismo operador (en este caso, Claro))
-+ El hardware funcione correctamente, mediante pruebas iniciales como la de **Grabación y reproducción** o la de **Conexión a red LTE**. 
++ El hardware funcione correctamente, mediante pruebas iniciales como la de **Grabación y reproducción** o la de **Conexión a red LTE**.
+
+Adicionalmente, el siguiente link lleva a la página web con el **modelo 3D de las carcasas** utilizadas para cada módulo, para el prototipo final del proyecto: https://www.printables.com/model/1613743-walkie-talkie-dummy#preview.file.YqNjY.
