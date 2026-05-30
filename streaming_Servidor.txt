@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""
+Walkie-talkie relay server — arquitectura polling
+A  → puerto 5004 (push audio)
+B  → puerto 5006 (FETCH audio + registro heartbeat)
+FETCH entrega hasta 4 paquetes de 320 bytes = 1280 bytes = 80ms audio
+"""
+import socket
+import threading
+import time
+from collections import deque
+PORT_A    = 5004
+PORT_CTRL = 5006
+QUEUE_MAX = 10
+TIMEOUT   = 30
+clients = {
+    "A": {"addr": None, "last_seen": 0},
+    "B": {"addr": None, "last_seen": 0},
+}
+queue_a_to_b = deque(maxlen=QUEUE_MAX)
+lock = threading.Lock()
+def is_active(cid):
+    return time.time() - clients[cid]["last_seen"] < TIMEOUT
+def recv_from_A():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(("0.0.0.0", PORT_A))
+    print(f"[A] Escuchando en :{PORT_A}")
+    while True:
+        data, addr = sock.recvfrom(4096)
+        with lock:
+            clients["A"]["addr"]      = addr
+            clients["A"]["last_seen"] = time.time()
+            queue_a_to_b.append(data)
+def ctrl():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(("0.0.0.0", PORT_CTRL))
+    print(f"[CTRL] Escuchando en :{PORT_CTRL}")
+    while True:
+        data, addr = sock.recvfrom(256)
+        msg = data.decode(errors="ignore").strip()
+        if msg == "ID:A":
+            with lock:
+                clients["A"]["addr"]      = addr
+                clients["A"]["last_seen"] = time.time()
+            sock.sendto(b"OK", addr)
+        elif msg == "ID:B":
+            with lock:
+                clients["B"]["addr"]      = addr
+                clients["B"]["last_seen"] = time.time()
+            sock.sendto(b"OK", addr)
+            print(f"[CTRL] Módulo B registrado: {addr}")
+        elif msg == "FETCH":
+            with lock:
+                clients["B"]["addr"]      = addr
+                clients["B"]["last_seen"] = time.time()
+                if queue_a_to_b:
+                    payload = b""
+                    count = 0
+                    while queue_a_to_b and count < 4:
+                        pkt = queue_a_to_b.popleft()
+                        if len(pkt) == 320:
+                            payload += pkt
+                        count += 1
+                    if not payload:
+                        payload = b"EMPTY"
+                else:
+                    payload = b"EMPTY"
+            sock.sendto(payload, addr)
+def status():
+    while True:
+        time.sleep(10)
+        with lock:
+            cola = len(queue_a_to_b)
+        for cid in ("A", "B"):
+            estado = "activo" if is_active(cid) else "inactivo"
+            print(f"  Módulo {cid}: {clients[cid]['addr']} [{estado}]")
+        print(f"  Cola A→B: {cola} paquetes")
+if __name__ == "__main__":
+    for fn in (recv_from_A, ctrl, status):
+        threading.Thread(target=fn, daemon=True).start()
+    print("Servidor walkie iniciado")
+    threading.Event().wait()
