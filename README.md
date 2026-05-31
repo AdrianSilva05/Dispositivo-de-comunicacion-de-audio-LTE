@@ -6,7 +6,7 @@ Los siguientes códigos fueron utilizados para **pruebas iniciales, aún sin tra
 + **Amplificador MAX98357A** (prueba_amp.ino). 
 + **Conexión a red LTE** (PruebaLTE.ino).
 + **Conexión a servidor relay** (prueba_servidor.ino).
-+ **Grabación y reproducción** (prueba_grabacion_y_reproduccion.ino).
++ **Grabación y reproducción (micrófono + amplificador simultáneamente)** (prueba_grabacion_y_reproduccion.ino).
 
 Las pruebas se deben ejecutar una por una en **Arduino IDE**, con el **gestor de placas de ESP32** previamente instalado y la **opción de placa "ESP32 Dev Module"** escogida. Además, para la prueba del amplificador, se deben instalar las librerías:
 
